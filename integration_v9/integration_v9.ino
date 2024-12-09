@@ -876,13 +876,13 @@ void loop() {
                 SOC_SAMP++;
                 if (SOC_SAMP >= 6) {
                   SOC_SAMP = 0;
-                  SOC_CHECK == 0;
+                  SOC_CHECK = 0;
                   fault = 1;
                   stopSOCCheck = true;
                   break;
                 }
               } else {
-                SOC_CHECK == 1;
+                SOC_CHECK = 1;
                 fault = 0;
               }
 
