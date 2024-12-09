@@ -778,7 +778,7 @@ void loop() {
   // Serial.print("Timestamp: ");
   // Serial.println(timestamp);
 
-  if (!digitalRead(CHARGER_DOCK)) {
+  if (digitalRead(CHARGER_DOCK)) {
     wakeup_process();
     if (deviceActive) {
       if (SOC_CHECK && !stopSOCCheck) {
@@ -789,7 +789,7 @@ void loop() {
               timestamp = millis();
 
               // Stop if the charger is connected
-              if (digitalRead(CHARGER_DOCK)) {
+              if (!digitalRead(CHARGER_DOCK)) {
                 Serial.println("Charger connected. Halting operations...");
                 ledcWrite(CS_FAN_Channel, 0);  // Stop all PWM channels
                 ledcWrite(HS_FAN_Channel, 0);
