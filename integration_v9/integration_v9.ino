@@ -752,7 +752,7 @@ void wakeup_process() {
           Serial.println("device is reactive:");
           Buzzer_LID();
           if (soc <= 10) {
-            SOC_CHECK == 0;
+            SOC_CHECK = 0;
             fault = 1;
             stopSOCCheck = true;
           }
