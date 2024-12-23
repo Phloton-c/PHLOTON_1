@@ -520,7 +520,7 @@ void Current_values() {
 
     // Read ADC for TEC
     int TEC_COLD_CTRL_AdcValue = analogRead(TEC_ISNS);  // Read ADC for HSFAN
-    // Serial.println(TEC_COLD_CTRL_AdcValue);
+    Serial.println(TEC_COLD_CTRL_AdcValue);
     float TEC_COLD_CTRL_Voltage = TEC_COLD_CTRL_AdcValue * (ADC_REF_VOLTAGE / ADC_RESOLUTION);
     TEC_ISNS_current = TEC_COLD_CTRL_Voltage / (TEC_COLD_CTRL_RSENSE * 100);
 
@@ -768,13 +768,13 @@ void loop() {
   // Serial.print("Timestamp: ");
   // Serial.println(timestamp);
 
-  if (!digitalRead(CHARGER_DOCK)) {
+  if (digitalRead(CHARGER_DOCK)) {
     wakeup_process();
     if (deviceActive) {
       if (SOC_CHECK && !stopSOCCheck) {
         if (HS_Fan_Check()) {
           if (CS_Fan_Check()) {
-            while (digitalRead(LID) == HIGH) {
+            while (!digitalRead(LID) == HIGH) {
               lidWasLow = false;
               timestamp = millis();
 
