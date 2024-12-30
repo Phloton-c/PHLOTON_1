@@ -774,18 +774,18 @@ void loop() {
       if (SOC_CHECK && !stopSOCCheck) {
         if (HS_Fan_Check()) {
           if (CS_Fan_Check()) {
-            while (!digitalRead(LID) == HIGH) {
+            while (digitalRead(LID) == HIGH) {
               lidWasLow = false;
               timestamp = millis();
 
               // Stop if the charger is connected
-              // if (!digitalRead(CHARGER_DOCK)) {
-              //   Serial.println("Charger connected. Halting operations...");
-              //   ledcWrite(CS_FAN_Channel, 0);  // Stop all PWM channels
-              //   ledcWrite(HS_FAN_Channel, 0);
-              //   ledcWrite(TEC_Channel, 0);
-              //   return;  // Exit loop to stop further execution
-              // }
+              if (!digitalRead(CHARGER_DOCK)) {
+                Serial.println("Charger connected. Halting operations...");
+                ledcWrite(CS_FAN_Channel, 0);  // Stop all PWM channels
+                ledcWrite(HS_FAN_Channel, 0);
+                ledcWrite(TEC_Channel, 0);
+                return;  // Exit loop to stop further execution
+              }
 
               // Periodically check for GPS location every 10 seconds
               // Locationtimer++;
