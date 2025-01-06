@@ -94,6 +94,9 @@ bool TEC_Status;
 bool HS_FAN_Status;
 bool CS_FAN_Status;
 
+const float undervoltage_cutoff= 13.0;
+const float Overvoltage_cutoff= 16.8;
+
 const float vRef = 2.5;        // Reference voltage
 const uint16_t adcMax = 4095;  // Max ADC value (12-bit ADC)
 const float rFixed = 10000.0;  // Fixed resistor value in ohms (10k)
@@ -213,7 +216,7 @@ void setup() {
     Serial.println("");
 
     // Open file to check its size
-    myFile = SD.open("/data_logging_02.csv", FILE_APPEND);
+    myFile = SD.open("/data_logging_03.csv", FILE_APPEND);
 
     if (myFile) {
       // If the file is empty, print the headings
@@ -315,12 +318,12 @@ float readBatteryVoltage() {
 }
 
 int sample_soc(float voltage) {
-  if (voltage <= 12.2) {
+  if (voltage <= undervoltage_cutoff) {
     return 0;
-  } else if (voltage >= 16.8) {
+  } else if (voltage >= Overvoltage_cutoff) {
     return 100;
   } else {
-    return (int)((voltage - 12.2) / (16.8 - 12.2) * 99) + 1;
+    return (int)((voltage - undervoltage_cutoff) / (Overvoltage_cutoff - undervoltage_cutoff) * 99) + 1;
   }
 }
 
@@ -720,7 +723,7 @@ void wakeup_process() {
           // esp_restart();
         }
         timestamp = millis();
-        myFile = SD.open("/data_logging_02.csv", FILE_APPEND);
+        myFile = SD.open("/data_logging_03.csv", FILE_APPEND);
         if (myFile) {
           myFile.print(timestamp);
           myFile.print(",");
@@ -759,7 +762,7 @@ void wakeup_process() {
 
 void loop() {
   // Open the file for appending
-  myFile = SD.open("/data_logging_02.csv", FILE_APPEND);
+  myFile = SD.open("/data_logging_03.csv", FILE_APPEND);
   // if (myFile) {
   // Get timestamp (milliseconds since program started)
   timestamp = millis();
@@ -847,7 +850,7 @@ void loop() {
               Serial.println(CS_FAN_Status);
               
 
-              myFile = SD.open("/data_logging_02.csv", FILE_APPEND);
+              myFile = SD.open("/data_logging_03.csv", FILE_APPEND);
               if (myFile) {
                 myFile.print(timestamp);
                 myFile.print(",");
@@ -966,7 +969,7 @@ void loop() {
         Serial.println("Connect charger");
         LED_INDI();
         timestamp = millis();
-        myFile = SD.open("/data_logging_02.csv", FILE_APPEND);
+        myFile = SD.open("/data_logging_03.csv", FILE_APPEND);
         if (myFile) {
           myFile.print(timestamp);
           myFile.print(",");
